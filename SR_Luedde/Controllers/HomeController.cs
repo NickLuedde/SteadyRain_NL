@@ -13,37 +13,83 @@ namespace SR_Luedde.Controllers
         //I create a new object
         private SR_StudentsEntities db = new SR_StudentsEntities();
 
-        public ActionResult Index(string option, string search, int? pageNumber)
-        {
-            //I Convert it into a list
+        public ActionResult Index(string option, string search, int? pageNumber, string sort)
+        { 
+           
+            ViewBag.SortByName = string.IsNullOrEmpty(sort) ? "descending name" : "";  
 
-            List<Student> StudentList = db.Students.ToList();
+            ViewBag.SortBySchool = sort == "School" ? "descending school" : "School";
 
+            ViewBag.SortByMajor = sort == "Major" ? "descending major" : "Major";
+
+            ViewBag.SortByDate = sort == "Date" ? "descending date" : "Date";
+
+            ViewBag.SortByActive = sort == "Active" ? "descending active" : "Active";
+
+            
+            var records = db.Students.AsQueryable();
+
+            
             if (option == "Name")
             {
-                return View(db.Students.Where(x => x.Name == search || search == null).ToList().ToPagedList(pageNumber ?? 1,10));
+                records = records.Where(x => x.Name == search || search == null);
             }
             if (option == "School")
             {
-                return View(db.Students.Where(x => x.School == search || search == null).ToList());
+                records = records.Where(x => x.School == search || search == null);
             }
             if (option == "Major")
             {
-                return View(db.Students.Where(x => x.Major == search || search == null).ToList().ToPagedList(pageNumber ?? 1, 10));
+                records = records.Where(x => x.Major == search || search == null);
             }
             if (option == "Date")
             {
-                return View(db.Students.Where(x => x.Date == search || search == null).ToList().ToPagedList(pageNumber ?? 1, 10));
+                records = records.Where(x => x.Date == search || search == null);
             }
             if (option == "Active")
             {
-                return View(db.Students.Where(x => x.Active == search || search == null).ToList().ToPagedList(pageNumber ?? 1, 10));
+                records = records.Where(x => x.Active == search || search == null);
             }
             else
             {
-                return View(db.Students.Where(x => x.Name.StartsWith(search) || search == null).ToList().ToPagedList(pageNumber ?? 1, 10));
+                records = records.Where(x => x.Name.StartsWith(search) || search == null);
             }
+
+            switch (sort)
+            {
+
+                case "descending name":
+                    records = records.OrderByDescending(x => x.Name);
+                    break;
+
+                case "descending school":
+                    records = records.OrderByDescending(x => x.School);
+                    break;
+
+                case "descending major":
+                    records = records.OrderByDescending(x => x.Major);
+                    break;
+
+                case "descending date":
+                    records = records.OrderByDescending(x => x.Date);
+                    break;
+
+                case "descending active":
+                    records = records.OrderByDescending(x => x.Active);
+                    break;
+
+                default:
+                    records = records.OrderBy(x => x.Name);
+                    break;
+
+            }
+            return View(records.ToPagedList(pageNumber ?? 1, 10));
         }
+    
+
+
+
+
 
         // GET: Home/Details/5
         public ActionResult Details(int id)

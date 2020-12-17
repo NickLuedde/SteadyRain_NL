@@ -1,10 +1,7 @@
-﻿using SR_Luedde.Models;
-using System.Collections.Generic;
+﻿using PagedList;
+using SR_Luedde.Models;
 using System.Linq;
-using PagedList;
-using PagedList.Mvc;  
 using System.Web.Mvc;
-
 
 namespace SR_Luedde.Controllers
 {
@@ -14,9 +11,8 @@ namespace SR_Luedde.Controllers
         private SR_StudentsEntities db = new SR_StudentsEntities();
 
         public ActionResult Index(string option, string search, int? pageNumber, string sort)
-        { 
-           
-            ViewBag.SortByName = string.IsNullOrEmpty(sort) ? "descending name" : "";  
+        {
+            ViewBag.SortByName = string.IsNullOrEmpty(sort) ? "descending name" : "";
 
             ViewBag.SortBySchool = sort == "School" ? "descending school" : "School";
 
@@ -26,10 +22,8 @@ namespace SR_Luedde.Controllers
 
             ViewBag.SortByActive = sort == "Active" ? "descending active" : "Active";
 
-            
             var records = db.Students.AsQueryable();
 
-            
             if (option == "Name")
             {
                 records = records.Where(x => x.Name == search || search == null);
@@ -57,7 +51,6 @@ namespace SR_Luedde.Controllers
 
             switch (sort)
             {
-
                 case "descending name":
                     records = records.OrderByDescending(x => x.Name);
                     break;
@@ -81,15 +74,9 @@ namespace SR_Luedde.Controllers
                 default:
                     records = records.OrderBy(x => x.Name);
                     break;
-
             }
             return View(records.ToPagedList(pageNumber ?? 1, 10));
         }
-    
-
-
-
-
 
         // GET: Home/Details/5
         public ActionResult Details(int? id)
@@ -107,10 +94,9 @@ namespace SR_Luedde.Controllers
         [HttpPost]
         public ActionResult Create(Student student)
         {
-                db.Students.Add(student);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-           
+            db.Students.Add(student);
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
 
         // GET: Home/Edit/5

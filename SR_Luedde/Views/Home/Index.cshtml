@@ -1,4 +1,9 @@
-﻿@model IEnumerable<SR_Luedde.Models.Student>
+﻿@using PagedList;
+@using PagedList.Mvc;
+
+@model IPagedList<SR_Luedde.Models.Student>
+
+<link href="~/Content/PagedList.css" rel="stylesheet" />
 
 @{
     ViewBag.Title = "Index";
@@ -24,24 +29,23 @@
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Add a Student", "Create")
 </p>
-<table class="table">
+<table class="table" border="1">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayNameFor(model => model.First().Name)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.School)
+            @Html.DisplayNameFor(model => model.First().School)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Major)
+            @Html.DisplayNameFor(model => model.First().Major)
+        <th>
+            @Html.DisplayNameFor(model => model.First().Date)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Date)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Active)
+            @Html.DisplayNameFor(model => model.First().Active)
         </th>
         <th></th>
     </tr>
@@ -82,3 +86,10 @@
         }
     }
 </table>
+
+@Html.PagedListPager(Model, pageNumber => Url.Action("Index", new
+{
+pageNumber,
+option = Request.QueryString["option"],
+search = Request.QueryString["search"]
+}))

@@ -1,7 +1,10 @@
 ﻿using SR_Luedde.Models;
 using System.Collections.Generic;
 using System.Linq;
+using PagedList;
+using PagedList.Mvc;  
 using System.Web.Mvc;
+
 
 namespace SR_Luedde.Controllers
 {
@@ -10,7 +13,7 @@ namespace SR_Luedde.Controllers
         //I create a new object
         private SR_StudentsEntities db = new SR_StudentsEntities();
 
-        public ActionResult Index(string option, string search)
+        public ActionResult Index(string option, string search, int? pageNumber)
         {
             //I Convert it into a list
 
@@ -18,7 +21,7 @@ namespace SR_Luedde.Controllers
 
             if (option == "Name")
             {
-                return View(db.Students.Where(x => x.Name == search || search == null).ToList());
+                return View(db.Students.Where(x => x.Name == search || search == null).ToList().ToPagedList(pageNumber ?? 1,10));
             }
             if (option == "School")
             {
@@ -26,19 +29,19 @@ namespace SR_Luedde.Controllers
             }
             if (option == "Major")
             {
-                return View(db.Students.Where(x => x.Major == search || search == null).ToList());
+                return View(db.Students.Where(x => x.Major == search || search == null).ToList().ToPagedList(pageNumber ?? 1, 10));
             }
             if (option == "Date")
             {
-                return View(db.Students.Where(x => x.Date == search || search == null).ToList());
+                return View(db.Students.Where(x => x.Date == search || search == null).ToList().ToPagedList(pageNumber ?? 1, 10));
             }
             if (option == "Active")
             {
-                return View(db.Students.Where(x => x.Active == search || search == null).ToList());
+                return View(db.Students.Where(x => x.Active == search || search == null).ToList().ToPagedList(pageNumber ?? 1, 10));
             }
             else
             {
-                return View(db.Students.Where(x => x.Name.StartsWith(search) || search == null).ToList());
+                return View(db.Students.Where(x => x.Name.StartsWith(search) || search == null).ToList().ToPagedList(pageNumber ?? 1, 10));
             }
         }
 

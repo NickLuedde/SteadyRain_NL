@@ -1,2 +1,2 @@
 # SteadyRain_NL
-Nick LUedde
+Nick Luedde

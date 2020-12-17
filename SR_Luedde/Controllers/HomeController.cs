@@ -92,7 +92,7 @@ namespace SR_Luedde.Controllers
 
 
         // GET: Home/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(int? id)
         {
             return View();
         }
@@ -105,18 +105,12 @@ namespace SR_Luedde.Controllers
 
         // POST: Home/Create
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public ActionResult Create(Student student)
         {
-            try
-            {
-                // TODO: Add insert logic here
-
+                db.Students.Add(student);
+                db.SaveChanges();
                 return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+           
         }
 
         // GET: Home/Edit/5
